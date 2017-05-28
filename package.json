@@ -1,5 +1,5 @@
 {
-  "name": "@jakepartusch/garmin-node-api",
+  "name": "garmin-node-api",
   "version": "0.0.1",
   "description": "Module for logging in to Garmin Connect and retrieving basic data",
   "main": "index.js",
