@@ -31,3 +31,17 @@ Returns step and goal count for each day within the specified range:
 #### getUsername()
 Returns the logged in username. Can be used to check if the login cookies are valid
 
+##### getActivities(fromDate, untilDate)
+Returns activities
+
+`getActivities('2017-01-01', '2017-05-01')`
+
+#### getDailyHeartRate(date)
+Returns daily heart rate
+
+`getDailyHeartRate('2017-01-01')`
+
+#### getDailySleep(date)
+Returns daily sleep
+
+`getDailySleep('2017-01-01')`

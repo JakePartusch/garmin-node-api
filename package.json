@@ -1,12 +1,12 @@
 {
   "name": "garmin-node-api",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Module for logging in to Garmin Connect and retrieving basic data",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jake Partusch",
+  "author": "Jake Partusch, Michael Svanström",
   "license": "MIT",
   "dependencies": {
     "@3846masa/axios-cookiejar-support": "0.0.4",

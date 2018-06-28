@@ -29,29 +29,66 @@ module.exports = class GarminNodeApi {
             'consumeServiceTicket' : 'false'
         });
 
-        var response = await axios.post("https://sso.garmin.com/sso/login?" + requestQuery, loginQuery);
+        var response = await axios.post('https://sso.garmin.com/sso/login?' + requestQuery, loginQuery);
         var loginResponse = response.data;
         if(loginResponse.includes('Login Successful')) {
             var ticketRegex = /ticket=([^\"]+)\"/;
             var ticket = loginResponse.match(ticketRegex)[1];
+            console.log('Login OK. Ticket: ' + ticket)
             try {
-                await axios.post('https://connect.garmin.com/post-auth/login?ticket=' + ticket);
-            } catch(e)  {
-                await axios.get(e.response.headers.location);
-            };
+                var url = 'https://connect.garmin.com/modern/?ticket=' + ticket
+                response = await axios.post(url)
+                var modernResponse = response.data;
+                var displayNameRegex = /displayName\\\":\\\"([^\"]+)\\\",/;
+                this.displayName = modernResponse.match(displayNameRegex)[1];
+                console.log('Display name is ' + this.displayName)
+            } catch (e)
+            {
+                console.log(e)
+            }
         } else {
             console.log('Login Failed');
         }
     }
 
     async getSteps(fromDate, untilDate) {
-        var username = await this.getUsername();
-        var response = await axios.get('https://connect.garmin.com/modern/proxy/userstats-service/wellness/daily/'+ username + '?fromDate=' + fromDate + '&untilDate=' + untilDate + '&metricId=29&metricId=38&grpParentActType=false');
+        var url = 'https://connect.garmin.com/modern/proxy/userstats-service/wellness/daily/'+ this.displayName + '?fromDate=' + fromDate + '&untilDate=' + untilDate + '&metricId=29&metricId=38&grpParentActType=false';
+        var response = await axios.get(url);
         return response.data;
     }
 
     async getUsername() {
-        var response = await  axios.get('https://connect.garmin.com/user/username');
-        return response.data.username;
+        try {
+            var url = 'https://connect.garmin.com/modern/'
+            var response = await axios.get(url)
+            var modernResponse = response.data;
+            var displayNameRegex = /displayName\\\":\\\"([^\"]+)\\\",/;
+            return modernResponse.match(displayNameRegex)[1];
+        } catch (e)
+        {
+            console.log(e)
+        }
+        return null;
+    }
+
+    async getActivities(fromDate, untilDate)
+    {
+        var url = 'https://connect.garmin.com/modern/proxy/userstats-service/activities/daily/'+this.displayName+'?fromDate='+fromDate+'&untilDate='+untilDate+'&metricId=17&grpParentActType=true';
+        var response = await axios.get(url)
+        return response.data;
+    }
+
+    async getDailyHeartRate(date)
+    {
+        var url = 'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailyHeartRate/'+this.displayName+'?date='+date;
+        var response = await axios.get(url)
+        return response.data;
+    }
+
+    async getDailySleep(date)
+    {
+        var url = 'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySleep/user/'+this.displayName+'?date='+date;
+        var response = await axios.get(url)
+        return response.data;
     }
 }
