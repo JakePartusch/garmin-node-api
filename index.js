@@ -16,54 +16,43 @@ module.exports = class GarminNodeApi {
     }
 
     async login() {
-        var loginQuery = querystring.stringify({
+        const loginQuery = querystring.stringify({
           embed: 'false',
           password: this.password,
           username: this.username
         })
 
-        var requestQuery = querystring.stringify({
+        const loginRequestQuery = querystring.stringify({
             'service' : 'https://connect.garmin.com/post-auth/login',
             'clientId' : 'GarminConnect',
             'gauthHost' : 'https://sso.garmin.com/sso',
             'consumeServiceTicket' : 'false'
         });
 
-        var response = await axios.post('https://sso.garmin.com/sso/login?' + requestQuery, loginQuery);
-        var loginResponse = response.data;
+        let response = await axios.post(`https://sso.garmin.com/sso/login?${loginRequestQuery}`, loginQuery);
+        let loginResponse = response.data;
         if(loginResponse.includes('Login Successful')) {
-            var ticketRegex = /ticket=([^\"]+)\"/;
-            var ticket = loginResponse.match(ticketRegex)[1];
+            let ticketRegex = /ticket=([^\"]+)\"/;
+            let ticket = loginResponse.match(ticketRegex)[1];
             console.log('Login OK. Ticket: ' + ticket)
-            try {
-                var url = 'https://connect.garmin.com/modern/?ticket=' + ticket
-                response = await axios.post(url)
-                var modernResponse = response.data;
-                var displayNameRegex = /displayName\\\":\\\"([^\"]+)\\\",/;
-                this.displayName = modernResponse.match(displayNameRegex)[1];
-                console.log('Display name is ' + this.displayName)
-            } catch (e)
-            {
-                console.log(e)
-            }
+            this.username = await this.getUsername();
+            console.log('Using username ' + this.username)
         } else {
             console.log('Login Failed');
         }
     }
 
     async getSteps(fromDate, untilDate) {
-        var url = 'https://connect.garmin.com/modern/proxy/userstats-service/wellness/daily/'+ this.displayName + '?fromDate=' + fromDate + '&untilDate=' + untilDate + '&metricId=29&metricId=38&grpParentActType=false';
-        var response = await axios.get(url);
+        const url = `https://connect.garmin.com/modern/proxy/userstats-service/wellness/daily/${this.username}?fromDate=${fromDate}&untilDate=${untilDate}&metricId=29&metricId=38&grpParentActType=false`;
+        let response = await axios.get(url);
         return response.data;
     }
 
     async getUsername() {
         try {
-            var url = 'https://connect.garmin.com/modern/'
-            var response = await axios.get(url)
-            var modernResponse = response.data;
-            var displayNameRegex = /displayName\\\":\\\"([^\"]+)\\\",/;
-            return modernResponse.match(displayNameRegex)[1];
+            const url = 'https://connect.garmin.com/modern/currentuser-service/user/info'
+            let response = await axios.get(url)
+            return response.data.username;
         } catch (e)
         {
             console.log(e)
@@ -73,22 +62,22 @@ module.exports = class GarminNodeApi {
 
     async getActivities(fromDate, untilDate)
     {
-        var url = 'https://connect.garmin.com/modern/proxy/userstats-service/activities/daily/'+this.displayName+'?fromDate='+fromDate+'&untilDate='+untilDate+'&metricId=17&grpParentActType=true';
-        var response = await axios.get(url)
+        const url = `https://connect.garmin.com/modern/proxy/userstats-service/activities/daily/${this.username}?fromDate=${fromDate}&untilDate=${untilDate}&metricId=17&grpParentActType=true`;
+        let response = await axios.get(url)
         return response.data;
     }
 
     async getDailyHeartRate(date)
     {
-        var url = 'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailyHeartRate/'+this.displayName+'?date='+date;
-        var response = await axios.get(url)
+        const url = `https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailyHeartRate/${this.username}?date=${date}`;
+        let response = await axios.get(url)
         return response.data;
     }
 
     async getDailySleep(date)
     {
-        var url = 'https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySleep/user/'+this.displayName+'?date='+date;
-        var response = await axios.get(url)
+        const url = `https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySleep/user/${this.username}?date=${date}`;
+        let response = await axios.get(url)
         return response.data;
     }
 }
