@@ -4,7 +4,8 @@
   "description": "Module for logging in to Garmin Connect and retrieving basic data",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --single-quote --write \"**/*.js\""
   },
   "author": "Jake Partusch, Michael Svanström",
   "license": "MIT",
@@ -12,5 +13,8 @@
     "@3846masa/axios-cookiejar-support": "0.0.4",
     "axios": "0.16.1",
     "querystring": "0.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.14.1"
   }
 }
