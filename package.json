@@ -13,8 +13,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@3846masa/axios-cookiejar-support": "0.0.4",
-    "axios": "0.16.1",
+    "@3846masa/axios-cookiejar-support": "0.3.5",
+    "axios": "0.18.0",
     "querystring": "0.2.0"
   },
   "devDependencies": {
