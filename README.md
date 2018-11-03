@@ -45,3 +45,8 @@ Returns daily heart rate
 Returns daily sleep
 
 `getDailySleep('2017-01-01')`
+
+#### setUserWeight(weigth, date)
+Set user weigth
+
+`setUserWeight(70, '2017-01-01')`
