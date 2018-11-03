@@ -47,7 +47,7 @@ module.exports = class GarminNodeApi {
   async getSteps(fromDate, untilDate) {
     const url = `https://connect.garmin.com/modern/proxy/userstats-service/wellness/daily/${
       this.username
-    }?fromDate=${fromDate}&untilDate=${untilDate}&metricId=29&metricId=38&grpParentActType=false`;
+      }?fromDate=${fromDate}&untilDate=${untilDate}&metricId=29&metricId=38&grpParentActType=false`;
     const response = await axios.get(url);
     return response.data;
   }
@@ -62,7 +62,7 @@ module.exports = class GarminNodeApi {
   async getActivities(fromDate, untilDate) {
     const url = `https://connect.garmin.com/modern/proxy/userstats-service/activities/daily/${
       this.username
-    }?fromDate=${fromDate}&untilDate=${untilDate}&metricId=17&grpParentActType=true`;
+      }?fromDate=${fromDate}&untilDate=${untilDate}&metricId=17&grpParentActType=true`;
     const response = await axios.get(url);
     return response.data;
   }
@@ -70,7 +70,7 @@ module.exports = class GarminNodeApi {
   async getDailyHeartRate(date) {
     const url = `https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailyHeartRate/${
       this.username
-    }?date=${date}`;
+      }?date=${date}`;
     const response = await axios.get(url);
     return response.data;
   }
@@ -78,8 +78,19 @@ module.exports = class GarminNodeApi {
   async getDailySleep(date) {
     const url = `https://connect.garmin.com/modern/proxy/wellness-service/wellness/dailySleep/user/${
       this.username
-    }?date=${date}`;
+      }?date=${date}`;
     const response = await axios.get(url);
     return response.data;
+  }
+
+  async setUserWeight(weigth, date) {
+    const config = {
+      url: 'https://connect.garmin.com/modern/proxy/weight-service/user-weight',
+      method: 'post',
+      headers: { nk: 'NT' },
+      data: { value: weigth, unitKey: "kg", date }
+    }
+    const response = await axios(config)
+    return response.data
   }
 };
