@@ -2,12 +2,12 @@
 
 jest.mock('axios')
 const axios = require('axios')
-const querystring = require('querystring');
+const querystring = require('querystring')
 
 const GarminNodeApi = require('../index')
 const USERNAME = 'USERNAME'
 const PASSWORD = 'PASSWORD'
-const api = new GarminNodeApi(USERNAME, PASSWORD);
+const api = new GarminNodeApi(USERNAME, PASSWORD)
 
 const MOCK_LOGIN_RESPONSE = {
   data: 'Login Successful,ticket=blabla"'
@@ -27,7 +27,7 @@ describe('GarminNodeApi', () => {
       embed: 'false',
       password: PASSWORD,
       username: USERNAME
-    });
+    })
 
     const loginRequestQuery = querystring.stringify({
       service: 'https://connect.garmin.com/modern/',
@@ -36,10 +36,10 @@ describe('GarminNodeApi', () => {
       clientId: 'GarminConnect',
       gauthHost: 'https://sso.garmin.com/sso',
       consumeServiceTicket: 'false'
-    });
+    })
     const URL_LOGIN = 'https://sso.garmin.com/sso/login?'
     const URL_USER_INFO = 'https://connect.garmin.com/modern/currentuser-service/user/info'
-    expect(axios.post).toHaveBeenCalledWith(`${URL_LOGIN}${loginRequestQuery}`,loginQuery)
+    expect(axios.post).toHaveBeenCalledWith(`${URL_LOGIN}${loginRequestQuery}`, loginQuery)
     expect(axios.get).toHaveBeenCalledWith(URL_USER_INFO)
   })
 })

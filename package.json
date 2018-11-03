@@ -4,6 +4,7 @@
   "description": "Module for logging in to Garmin Connect and retrieving basic data",
   "main": "index.js",
   "scripts": {
+    "pretest": "standard --fix",
     "test": "jest test/",
     "format": "prettier --single-quote --write \"**/*.js\""
   },
@@ -20,5 +21,10 @@
   "devDependencies": {
     "jest": "^23.6.0",
     "prettier": "^1.14.1"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }
